@@ -10,11 +10,12 @@ import copy
 
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.contrib import messages
+import logging
 
 
-def homePage(request):
+def register(request):
 
     if request.method == "POST":
         form = UserCreationForm(request.POST)
@@ -23,7 +24,7 @@ def homePage(request):
             username = form.cleaned_data.get('username')
             print(username)
             login(request, user)
-            return redirect('main:home_url')
+            return render(request, template_name='index.html', context={"username": username})
         else:
             for msg in form.error_messages:
                 print(form.error_messages[msg])
@@ -40,11 +41,12 @@ def loginUser(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
+            logging.info("username", username)
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}")
-                return  redirect('main:home_url')
+                return render(request,template_name='index.html', context={"username": username})
             else:
                 messages.error(request, "Invalid username or password")
         else:
@@ -53,6 +55,10 @@ def loginUser(request):
     form = AuthenticationForm
     return render(request= request,template_name='login.html', context={"form": form})
 
+def logout_user(request):
+    logout(request)
+    messages.info(request, "Logged out successfully!")
+    return redirect("main:register")
 
 def home(request):
     all_service = requests.get("http://127.0.0.1:8000/api/service_registry/").json()

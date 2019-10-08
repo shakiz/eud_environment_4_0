@@ -17,9 +17,10 @@ router.register('interactive', views.InteractiveAPI)
 app_name = "main"
 
 urlpatterns = [
-    path('', views.homePage, name='home'),
+    path('', views.register, name='register'),
     path('home/', views.home, name='home_url'),
     path('login/', views.loginUser, name='login'),
+    path('logout/', views.logout_user, name='logout'),
     path('api/', include(router.urls)),
     path('Label/', post_functions.Label, name='Label'),
     path('Read/', post_functions.Read, name='Read'),
