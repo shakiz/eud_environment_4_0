@@ -22,9 +22,10 @@ def register(request):
         if form.is_valid():
             user = form.save()
             username = form.cleaned_data.get('username')
+            request.session['username'] = username
             print(username)
             login(request, user)
-            return render(request, template_name='index.html', context={"username": username})
+            return redirect('main:home_url')
         else:
             for msg in form.error_messages:
                 print(form.error_messages[msg])
@@ -42,11 +43,12 @@ def loginUser(request):
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
             logging.info("username", username)
+            request.session['username'] = username
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
                 messages.info(request, f"You are now logged in as {username}")
-                return render(request,template_name='index.html', context={"username": username})
+                return redirect('main:home_url')
             else:
                 messages.error(request, "Invalid username or password")
         else:
