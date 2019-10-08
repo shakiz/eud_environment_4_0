@@ -8,9 +8,10 @@ from app_dir.main.generated_functions import *
 import ast
 import copy
 
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib import messages
 
 
 def homePage(request):
@@ -27,10 +28,31 @@ def homePage(request):
             for msg in form.error_messages:
                 print(form.error_messages[msg])
 
-            return render(request=request, template_name='home.html',context={"form": form})
+            return render(request=request, template_name='register.html',context={"form": form})
 
     form = UserCreationForm
-    return render(request = request, template_name= 'home.html',context={"form": form})
+    return render(request = request, template_name= 'register.html',context={"form": form})
+
+def loginUser(request):
+
+    if request.method == "POST":
+        form = AuthenticationForm(request, data= request.POST);
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.info(request, f"You are now logged in as {username}")
+                return  redirect('main:home_url')
+            else:
+                messages.error(request, "Invalid username or password")
+        else:
+            messages.error(request, "Unexpected things happened")
+
+    form = AuthenticationForm
+    return render(request= request,template_name='login.html', context={"form": form})
+
 
 def home(request):
     all_service = requests.get("http://127.0.0.1:8000/api/service_registry/").json()

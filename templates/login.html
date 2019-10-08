@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>End user driven composition</title>
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+</head>
+<body>
+
+    <div class="jumbotron">
+
+        <div class="container">
+            {% block content %}
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button class="btn btn-success btn-lg" type="submit">Login</button>
+                </form>
+
+                <p style="margin: 10px;">If you dont have an account , please
+                        <a href="{% url 'main:home' %}">
+                            <strong>register</strong>
+                        </a>
+                </p>
+            {% endblock %}
+        </div>
+
+    </div>
+
+
+</body>
+</html>

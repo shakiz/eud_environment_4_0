@@ -19,6 +19,7 @@ app_name = "main"
 urlpatterns = [
     path('', views.homePage, name='home'),
     path('home/', views.home, name='home_url'),
+    path('login/', views.loginUser, name='login'),
     path('api/', include(router.urls)),
     path('Label/', post_functions.Label, name='Label'),
     path('Read/', post_functions.Read, name='Read'),
