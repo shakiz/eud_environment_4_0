@@ -17,23 +17,27 @@ import logging
 
 def register(request):
 
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            username = form.cleaned_data.get('username')
-            request.session['username'] = username
-            print(username)
-            login(request, user)
-            return redirect('main:home_url')
-        else:
-            for msg in form.error_messages:
-                print(form.error_messages[msg])
+    if request.session.get('username') is None:
+        if request.method == "POST":
+            form = UserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save()
+                username = form.cleaned_data.get('username')
+                request.session['username'] = username
+                print(username)
+                login(request, user)
+                return redirect('main:home_url')
+            else:
+                for msg in form.error_messages:
+                    print(form.error_messages[msg])
 
-            return render(request=request, template_name='register.html',context={"form": form})
+                return render(request=request, template_name='register.html', context={"form": form})
 
-    form = UserCreationForm
-    return render(request = request, template_name= 'register.html',context={"form": form})
+        form = UserCreationForm
+        return render(request=request, template_name='register.html', context={"form": form})
+    else:
+        return redirect('main:home_url')
+
 
 def loginUser(request):
 
