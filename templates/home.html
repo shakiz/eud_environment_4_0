@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>End UserDriven Composition</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+
+    <div class="container">
+        <div>
+            <div class="jumbotron" style="margin: 40px; text-align: center;">
+                <h1 class="display-4">Authorize yourself please</h1><br>
+
+                {% block content %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button class="btn btn-success btn-lg" type="submit">Register</button>
+                    </form>
+
+                    <p style="margin: 10px;">If you already have an account , please
+                        <a href="">
+                        <strong>login</strong>
+                        </a>
+                    </p>
+                {% endblock %}
+
+
+           </div>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -14,18 +14,21 @@ router.register('mail_box', views.MailBoxAPI)
 router.register('api', views.APInterfaceAPI)
 router.register('interactive', views.InteractiveAPI)
 
+app_name = "main"
+
 urlpatterns = [
-    path('', views.home, name='home_url'),
+    path('', views.homePage, name='home'),
+    path('home/', views.home, name='home_url'),
     path('api/', include(router.urls)),
     path('Label/', post_functions.Label, name='Label'),
     path('Read/', post_functions.Read, name='Read'),
     path('Search/', post_functions.Search, name='Search'),
 
-path('news/', post_functions.news, name='news'),
-path('doctor/', post_functions.doctor, name='doctor'),
-path('cricket/', post_functions.cricket, name='cricket'),
-path('recipe_puppy/', post_functions.recipe_puppy, name='recipe_puppy'),
-path('newspaper_headlines/', post_functions.newspaper_headlines, name='newspaper_headlines'),    path('Send/', post_functions.Send, name='Send'),
+    path('news/', post_functions.news, name='news'),
+    path('doctor/', post_functions.doctor, name='doctor'),
+    path('cricket/', post_functions.cricket, name='cricket'),
+    path('recipe_puppy/', post_functions.recipe_puppy, name='recipe_puppy'),
+    path('newspaper_headlines/', post_functions.newspaper_headlines, name='newspaper_headlines'),    path('Send/', post_functions.Send, name='Send'),
     path('weather_info/', post_functions.weather_info, name='weather_info'),
     path('app_creator/', app_creator.create_app, name='app_creator'),
     path('eud_code/', views.eud_code, name='status'),

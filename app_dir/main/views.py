@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import viewsets, generics
 from .serializers import *
 from .models import *
@@ -8,6 +8,29 @@ from app_dir.main.generated_functions import *
 import ast
 import copy
 
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login, logout, authenticate
+from django.http import HttpResponse, HttpResponseRedirect
+
+
+def homePage(request):
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data.get('username')
+            print(username)
+            login(request, user)
+            return redirect('main:home_url')
+        else:
+            for msg in form.error_messages:
+                print(form.error_messages[msg])
+
+            return render(request=request, template_name='home.html',context={"form": form})
+
+    form = UserCreationForm
+    return render(request = request, template_name= 'home.html',context={"form": form})
 
 def home(request):
     all_service = requests.get("http://127.0.0.1:8000/api/service_registry/").json()
