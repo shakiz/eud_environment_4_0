@@ -21,7 +21,17 @@
                 </strong>
             </a>
         </li>
-        <li class="nav-item">
+         <li class="nav-item">
+            <a class="nav-link" href="#">
+                <strong>
+                    User id {{ request.session.user_id }}
+                </strong>
+            </a>
+        </li>
+        <li style="color: #0b2e13;">
+            <a class="nav-link" href=""><strong>History</strong></a>
+        </li>
+        <li class="nav-item" style="color: red;font-style: oblique">
             <a class="nav-link" href="{% url 'main:logout' %}">Logout</a>
         </li>
       </ul>

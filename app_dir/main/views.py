@@ -26,7 +26,7 @@ def register(request):
                 request.session['username'] = username
                 print(username)
                 login(request, user)
-                return redirect('main:home_url')
+                return redirect('main:login')
             else:
                 for msg in form.error_messages:
                     print(form.error_messages[msg])
@@ -46,11 +46,17 @@ def loginUser(request):
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
+
             logging.info("username", username)
             request.session['username'] = username
+
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
+
+                _id = request.user.id
+                request.session['user_id'] = _id
+
                 messages.info(request, f"You are now logged in as {username}")
                 return redirect('main:home_url')
             else:
