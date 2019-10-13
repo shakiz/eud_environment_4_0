@@ -67,13 +67,41 @@ def loginUser(request):
     form = AuthenticationForm
     return render(request= request,template_name='login.html', context={"form": form})
 
+
 def logout_user(request):
     logout(request)
     messages.info(request, "Logged out successfully!")
     return redirect("main:register")
 
+
+def save_composition(request):
+    if request.method == 'POST':
+        post_text = request.POST.get('code')
+        response_data = {}
+
+        post = SaveComposition(code=post_text)
+        post.save()
+
+        response_data['result'] = 'Create post successful!'
+
+        return HttpResponse(
+            json.dumps(response_data),
+            content_type="application/json"
+        )
+    else:
+        return HttpResponse(
+            json.dumps({"nothing to see": "this isn't happening"}),
+            content_type="application/json"
+        )
+
+
 def home(request):
     all_service = requests.get("http://127.0.0.1:8000/api/service_registry/").json()
+
+    save_com = SaveComposition.objects.all()
+
+    print(save_com.get(id=10).code)
+
     if len(all_service) > 0:
         last_service = all_service[-1]
         read_file = open('registry.txt', 'r')
@@ -167,6 +195,11 @@ class APInterfaceAPI(viewsets.ModelViewSet):
 class InteractiveAPI(viewsets.ModelViewSet):
     queryset = Interactive.objects.all()
     serializer_class = InteractiveSerializer
+
+
+class SaveCompositionAPI(viewsets.ModelViewSet):
+    queryset = Interactive.objects.all()
+    serializer_class = SaveCompositionSerializer
 
 
 class ActuatorListApiView(generics.ListAPIView):

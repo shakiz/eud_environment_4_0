@@ -23,6 +23,8 @@
         <button class="btn btn-warning" onclick="save()" id="save">Create App</button>
         <button class="btn btn-info" onclick="continuous()" id="continuous">Run Continuously</button>
         <button class="btn btn-danger" onclick="stop()" id="stop">Stop Continuous Run</button>
+        <button class="btn btn-success" onclick="saveComposition()"  id="saveComposition">Save Composition</button>
+
         {% csrf_token %}
     </p>
     <div id="another" class="col-md-6 pull-right" >
@@ -95,6 +97,11 @@
         <category name="Meta Block" colour="%{BKY_TEXTS_HUE}">
             {% include "meta_block_declaration.html" %}
         </category>
+
+        <category name="History" colour="%{BKY_TEXTS_HUE}">
+            {% include "history_block_declaration.html"%}
+        </category>
+
     </xml>
     <script>
         var demoWorkspace = Blockly.inject('blocklyDiv', {media: 'blockly/media/', toolbox: document.getElementById('toolbox')});
@@ -103,6 +110,27 @@
             var code = Blockly.Python.workspaceToCode(demoWorkspace);
             alert(code);
         }
+
+        function saveComposition() {
+            Blockly.Python.INFINITE_LOOP_TRAP = null;
+            var code = Blockly.Python.workspaceToCode(demoWorkspace);
+            $.ajax({
+                type: 'POST',
+                url: "/save_composition/",
+                headers: {
+                    "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()
+                },
+                data: {'code': code},
+                success: function (response) {
+                    console.log(response.code);
+                    document.getElementById("json").innerHTML = JSON.stringify(response.code, undefined, 2);
+                    {#$("#message").text(JSON.stringify(response.code));#}
+                }
+            });
+
+        }
+
+
         function save() {
             Blockly.Python.INFINITE_LOOP_TRAP = null;
             var code = Blockly.Python.workspaceToCode(demoWorkspace);

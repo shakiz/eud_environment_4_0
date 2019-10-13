@@ -83,3 +83,13 @@ class Interactive(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SaveComposition(models.Model):
+    code = models.TextField(max_length=1000,null=True)
+
+    class Meta:
+        verbose_name_plural = 'SaveComposition'
+
+        def __str__(self):
+            return self.code
