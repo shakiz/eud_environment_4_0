@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Actuator(models.Model):
@@ -86,6 +87,8 @@ class Interactive(models.Model):
 
 
 class SaveComposition(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    username = models.TextField(max_length=100, null=True)
     code = models.TextField(max_length=1000,null=True)
 
     class Meta:

@@ -16,7 +16,6 @@ import logging
 
 
 def register(request):
-
     if request.session.get('username') is None:
         if request.method == "POST":
             form = UserCreationForm(request.POST)
@@ -30,9 +29,7 @@ def register(request):
             else:
                 for msg in form.error_messages:
                     print(form.error_messages[msg])
-
                 return render(request=request, template_name='register.html', context={"form": form})
-
         form = UserCreationForm
         return render(request=request, template_name='register.html', context={"form": form})
     else:
@@ -40,23 +37,18 @@ def register(request):
 
 
 def loginUser(request):
-
     if request.method == "POST":
         form = AuthenticationForm(request, data= request.POST);
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-
             logging.info("username", username)
             request.session['username'] = username
-
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-
                 _id = request.user.id
                 request.session['user_id'] = _id
-
                 messages.info(request, f"You are now logged in as {username}")
                 return redirect('main:home_url')
             else:
@@ -78,10 +70,9 @@ def save_composition(request):
     if request.method == 'POST':
         post_text = request.POST.get('code')
         response_data = {}
-
-        post = SaveComposition(code=post_text)
+        user = request.user
+        post = SaveComposition(user=user, username=user.username, code=post_text)
         post.save()
-
         response_data['result'] = 'Create post successful!'
 
         return HttpResponse(
@@ -97,10 +88,6 @@ def save_composition(request):
 
 def home(request):
     all_service = requests.get("http://127.0.0.1:8000/api/service_registry/").json()
-
-    save_com = SaveComposition.objects.all()
-
-    print(save_com.get(id=10).code)
 
     if len(all_service) > 0:
         last_service = all_service[-1]
