@@ -105,15 +105,11 @@
     </xml>
     <script>
         var demoWorkspace = Blockly.inject('blocklyDiv', {media: 'blockly/media/', toolbox: document.getElementById('toolbox')});
-        function showCode() {
-            Blockly.Python.INFINITE_LOOP_TRAP = null;
-            var code = Blockly.Python.workspaceToCode(demoWorkspace);
-            alert(code);
-        }
-
+        
         function saveComposition() {
-            Blockly.Python.INFINITE_LOOP_TRAP = null;
-            var code = Blockly.Python.workspaceToCode(demoWorkspace);
+            var xml = Blockly.Xml.workspaceToDom(demoWorkspace);
+            var code = Blockly.Xml.domToPrettyText(xml);
+            alert(code);
             $.ajax({
                 type: 'POST',
                 url: "/save_composition/",
@@ -127,8 +123,49 @@
                     {#$("#message").text(JSON.stringify(response.code));#}
                 }
             });
-
+            console.log("composition backup");
         }
+        
+        function restore() {
+            Blockly.mainWorkspace.clear();
+            var xml = Blockly.Xml.textToDom(xml_text);
+            Blockly.Xml.domToWorkspace(xml, demoWorkspace);
+
+            {#var nameOfTheProject = document.getElementById("edu_environment_4_0").value;#}
+            {#if (localStorage.data != null){#}
+            {#    var xml = Blockly.xml.textToDom(localStorage.getItem(nameOfTheProject));#}
+            {#    Blockly.xml.domToWorkspace(Blockly.mainWorkspace, xml);#}
+            {#    console.log("composition restored")#}
+            {#}#}
+            {#else{#}
+            {##}
+            {#}#}
+        }
+        
+        function showCode() {
+            Blockly.Python.INFINITE_LOOP_TRAP = null;
+            var code = Blockly.Python.workspaceToCode(demoWorkspace);
+            alert(code);
+        }
+
+        {#function saveComposition() {#}
+        {#    Blockly.Python.INFINITE_LOOP_TRAP = null;#}
+        {#    var code = Blockly.Python.workspaceToCode(demoWorkspace);#}
+        {#    $.ajax({#}
+        {#        type: 'POST',#}
+        {#        url: "/save_composition/",#}
+        {#        headers: {#}
+        {#            "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()#}
+        {#        },#}
+        {#        data: {'code': code},#}
+        {#        success: function (response) {#}
+        {#            console.log(response.code);#}
+        {#            document.getElementById("json").innerHTML = JSON.stringify(response.code, undefined, 2);#}
+                    {#$("#message").text(JSON.stringify(response.code));#}
+        {#        }#}
+        {#    });#}
+        {##}
+        {#}#}
 
 
         function save() {

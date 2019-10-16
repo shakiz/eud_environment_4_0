@@ -1,12 +1,7 @@
 from __future__ import print_function
-
-from django.http import JsonResponse, HttpResponse
-
 from app_dir.main.forms import *
-from app_dir.main.conditional_forms import *
 import ast
 import copy
-import os
 
 
 def convertExpr2Expression(Expr):

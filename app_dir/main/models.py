@@ -95,4 +95,4 @@ class SaveComposition(models.Model):
         verbose_name_plural = 'SaveComposition'
 
         def __str__(self):
-            return self.code
+            return self.code, self.username, self.user

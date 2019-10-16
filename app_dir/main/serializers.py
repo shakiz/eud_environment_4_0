@@ -41,4 +41,4 @@ class InteractiveSerializer(serializers.ModelSerializer):
 class SaveCompositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = SaveComposition
-        fields = ('__all__')
+        fields = ('id', 'code', 'username', 'user_id')

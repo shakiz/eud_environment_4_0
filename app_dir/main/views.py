@@ -88,11 +88,13 @@ def save_composition(request):
 
 
 def home(request):
-    print(request.session['username'])
+
     if request.session['username'] is None:
+        print(request.session['username'])
         return render(request, 'login.html')
 
-    else:
+    elif request.session['username'] is not None:
+        print(request.session['username'])
         all_service = requests.get("http://127.0.0.1:8000/api/service_registry/").json()
 
         if len(all_service) > 0:
@@ -191,7 +193,7 @@ class InteractiveAPI(viewsets.ModelViewSet):
 
 
 class SaveCompositionAPI(viewsets.ModelViewSet):
-    queryset = Interactive.objects.all()
+    queryset = SaveComposition.objects.all()
     serializer_class = SaveCompositionSerializer
 
 

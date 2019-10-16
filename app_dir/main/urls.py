@@ -12,7 +12,7 @@ router.register('sensors', views.SensorAPI)
 router.register('service_registry', views.ServiceRegistryAPI)
 router.register('mail_box', views.MailBoxAPI)
 router.register('api', views.APInterfaceAPI)
-router.register('save_composition',views.SaveCompositionAPI)
+router.register('save_composition', views.SaveCompositionAPI)
 router.register('interactive', views.InteractiveAPI)
 
 app_name = "main"
