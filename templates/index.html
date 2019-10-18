@@ -24,6 +24,7 @@
         <button class="btn btn-info" onclick="continuous()" id="continuous">Run Continuously</button>
         <button class="btn btn-danger" onclick="stop()" id="stop">Stop Continuous Run</button>
         <button class="btn btn-success" onclick="saveComposition()"  id="saveComposition">Save Composition</button>
+        <button class="btn btn-dark" onclick="restore()" id="restore">Restore Composition</button>
 
         {% csrf_token %}
     </p>
@@ -127,19 +128,30 @@
         }
         
         function restore() {
-            Blockly.mainWorkspace.clear();
-            var xml = Blockly.Xml.textToDom(xml_text);
-            Blockly.Xml.domToWorkspace(xml, demoWorkspace);
 
-            {#var nameOfTheProject = document.getElementById("edu_environment_4_0").value;#}
-            {#if (localStorage.data != null){#}
-            {#    var xml = Blockly.xml.textToDom(localStorage.getItem(nameOfTheProject));#}
-            {#    Blockly.xml.domToWorkspace(Blockly.mainWorkspace, xml);#}
-            {#    console.log("composition restored")#}
-            {#}#}
-            {#else{#}
-            {##}
-            {#}#}
+            $.ajax({
+                type: "GET",
+                url: "/save_composition",
+                content_type : "application/json",
+                success: function(data) {
+                    alert(data);
+                },
+                error: function(xhr, textStatus) {
+                       alert(textStatus);
+                }});
+                {#success: function (response) {#}
+                {#    var xml = Blockly.xml.textToDom(data);#}
+                {#    Blockly.xml.domToWorkspace(Blockly.mainWorkspace, xml);#}
+                {#    alert(data);#}
+                {#    console.log(response.code);#}
+                {#    document.getElementById("json").innerHTML = JSON.stringify(response.code, undefined, 2);#}
+                {#    $("#message").text(JSON.stringify(response.code));#}
+                {#}#}
+
+
+
+
+
         }
         
         function showCode() {
@@ -186,20 +198,20 @@
             });
 
         }
-        $('#container2').load(document.URL +  ' #container2');
-        function restore() {
-            Blockly.demoWorkspace.clear()
-            var nameOfTheProject = document.getElementById("blocklyDiv").value;
-            if (typeof (Storage) !== "undefined") {
-                if (localStorage.data != null) {
-                    var xml = Blockly.Python.textToCode(localStorage.getItem(nameOfTheProject));
-                    Blockly.Python.domToWorkspace(Blockly.demoWorkspace, xml);
-                } else {
-                    alart("nothing to restore");
-                }
-            }
-        }
-        var myVar;
+        {#$('#container2').load(document.URL +  ' #container2');#}
+        {#function restore() {#}
+        {#    Blockly.demoWorkspace.clear()#}
+        {#    var nameOfTheProject = document.getElementById("blocklyDiv").value;#}
+        {#    if (typeof (Storage) !== "undefined") {#}
+        {#        if (localStorage.data != null) {#}
+        {#            var xml = Blockly.Python.textToCode(localStorage.getItem(nameOfTheProject));#}
+        {#            Blockly.Python.domToWorkspace(Blockly.demoWorkspace, xml);#}
+        {#        } else {#}
+        {#            alart("nothing to restore");#}
+        {#        }#}
+        {#    }#}
+        {#}#}
+        {#var myVar;#}
 
         function continuous() {
              Blockly.Python.INFINITE_LOOP_TRAP = null;

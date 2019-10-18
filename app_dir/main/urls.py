@@ -37,7 +37,7 @@ urlpatterns = [
     path('Send/', post_functions.Send, name='Send'),
     path('weather_info/', post_functions.weather_info, name='weather_info'),
     path('app_creator/', app_creator.create_app, name='app_creator'),
-    path('save_composition/',save_composition.save_com,name='save_composition'),
+    path('save_composition/',save_composition.save_com, name='save_composition'),
     path('eud_code/', views.eud_code, name='status'),
     path('actuators/', ActuatorListApiView.as_view(), name="actuator_filter"),
 

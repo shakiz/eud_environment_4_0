@@ -13,6 +13,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse
 from django.contrib import messages
 import logging
+from django.core import serializers
 
 
 def register(request):
@@ -79,6 +80,15 @@ def save_composition(request):
         return HttpResponse(
             json.dumps(response_data),
             content_type="application/json"
+        )
+    elif request.method == 'GET':
+        data = SaveComposition.objects.all()
+        #compositionSerializer = SaveCompositionSerializer(data,many=True)
+        serialized_data = serializers.serialize('json',data)
+        #print(data.get(username=request.session['username']))
+        return JsonResponse(
+            serialized_data,
+            safe=False
         )
     else:
         return HttpResponse(

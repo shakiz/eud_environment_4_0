@@ -96,3 +96,11 @@ class SaveComposition(models.Model):
 
         def __str__(self):
             return self.code, self.username, self.user
+
+        def __str__(self):
+            return self.user
+
+    def get(self):
+        return self.code
+
+
