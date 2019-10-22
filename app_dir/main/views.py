@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render, redirect
 from rest_framework import viewsets, generics
 from .serializers import *
@@ -73,7 +75,20 @@ def save_composition(request):
         post_text = request.POST.get('code')
         response_data = {}
         user = request.user
-        post = SaveComposition(user=user, username=user.username, code=post_text)
+
+        filefolder = ''
+
+        try:
+            data = '"' + post_text + '"'
+            # print(filefolder)
+            # file_to_open = filefolder + "code"+str(random.randint(1,100))+".txt"
+            # print(file_to_open)
+            # f = open(file_to_open, "w+")
+            # f.write(post_text)
+        except:
+            print("Error while writing file.")
+
+        post = SaveComposition(user=user, username=user.username, code=data)
         post.save()
         response_data['result'] = 'Create post successful!'
 
@@ -83,13 +98,26 @@ def save_composition(request):
         )
     elif request.method == 'GET':
         data = SaveComposition.objects.all()
-        #compositionSerializer = SaveCompositionSerializer(data,many=True)
-        serialized_data = serializers.serialize('json',data)
-        #print(data.get(username=request.session['username']))
-        return JsonResponse(
-            serialized_data,
-            safe=False
-        )
+        codes = []
+        if len(data) > 0:
+            try:
+                for i in data:
+                    print(i.code)
+                    # file_to_open = i.code
+                    # file = open(file_to_open, 'r')
+                    #
+                    # contents = file.read()
+                    # codes.append('"' + contents + '"')
+                    codes.append(i.code)
+            except:
+                print("Error reading the file")
+
+            return HttpResponse(
+                json.dumps(codes),
+                content_type="application/json"
+            )
+        else:
+            print("Data size is less than zero.")
     else:
         return HttpResponse(
             json.dumps({"nothing to see": "this isn't happening"}),
