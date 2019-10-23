@@ -108,6 +108,11 @@
         var demoWorkspace = Blockly.inject('blocklyDiv', {media: 'blockly/media/', toolbox: document.getElementById('toolbox')});
         
         function saveComposition() {
+
+            {#let xml1 = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);#}
+            {#let domToPretty = Blockly.Xml.domToPrettyText(xml1);#}
+            {#window.localStorage.setItem("myProgram1", domToPretty);#}
+
             var xml = Blockly.Xml.workspaceToDom(demoWorkspace);
             var code = Blockly.Xml.domToPrettyText(xml);
             alert(code);
@@ -129,12 +134,29 @@
         
         function restore() {
 
+
             $.ajax({
                 type: "GET",
                 url: "/save_composition",
                 content_type : "application/json",
                 success: function(data) {
-                    alert(data[0]);
+                    value = data[5];
+                    {#console.log(value.replace(/['"]+/g, ''));#}
+                    var result = value.slice(1, -1);
+                    alert(result);
+                    Blockly.Xml.appendDomToWorkspace(result,demoWorkspace);
+
+                    {#let program = window.localStorage.getItem("myProgram");#}
+                    {#Blockly.mainWorkspace.clear();#}
+                    {##}
+                    {#let textToDom = Blockly.Xml.textToDom(program);#}
+                    {#Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, textToDom);#}
+
+                    {#parser = new DOMParser();#}
+                    {#xmlDoc = parser.parseFromString(data[0],"text/xml");#}
+                    {##}
+                    {#document.getElementById("json").innerHTML =#}
+                    {#xmlDoc.getElementsByTagName("block")[0].childNodes[0].nodeValue;#}
                 },
                 error: function(xhr, textStatus) {
                        alert(textStatus);
@@ -147,6 +169,7 @@
                 {#    document.getElementById("json").innerHTML = JSON.stringify(response.code, undefined, 2);#}
                 {#    $("#message").text(JSON.stringify(response.code));#}
                 {#}#}
+
 
 
 
