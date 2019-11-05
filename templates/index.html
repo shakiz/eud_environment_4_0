@@ -31,7 +31,9 @@
     <div id="another" class="col-md-6 pull-right" >
         {% include "forms.html" %}
     </div>
-    <div id="blocklyDiv" class="col-md-6 pull-left" style="height: 480px; width: 50%;"></div>
+    <div id="blocklyDiv" class="col-md-6 pull-left" style="height: 480px; width: 50%;">
+
+    </div>
     <xml id="toolbox" style="display: none">
         <category name="Logic" colour="%{BKY_LOGIC_HUE}">
             <block type="controls_if"></block>
@@ -42,6 +44,9 @@
             <block type="do_it"></block>
             <block type="custom_if"></block>
             <block type="custom_if_else"></block>
+
+
+
         </category>
 
         <category name="Loops" colour="%{BKY_LOOPS_HUE}">
@@ -144,7 +149,7 @@
                     {#console.log(value.replace(/['"]+/g, ''));#}
                     var result = value.slice(1, -1);
                     alert(result);
-                    Blockly.Xml.appendDomToWorkspace(result,demoWorkspace);
+
 
                     {#let program = window.localStorage.getItem("myProgram");#}
                     {#Blockly.mainWorkspace.clear();#}
@@ -155,8 +160,8 @@
                     {#parser = new DOMParser();#}
                     {#xmlDoc = parser.parseFromString(data[0],"text/xml");#}
                     {##}
-                    {#document.getElementById("json").innerHTML =#}
-                    {#xmlDoc.getElementsByTagName("block")[0].childNodes[0].nodeValue;#}
+                    document.getElementById("test").innerHTML = value;
+                    document.getElementById("blocklyDiv").innerHTML = result;
                 },
                 error: function(xhr, textStatus) {
                        alert(textStatus);
@@ -280,6 +285,8 @@
     <div class="col-md-6 pull-left">
         <h1> Result</h1>
         <pre id="json"></pre>
+
+        <xmp id="test" lang="xml"></xmp>
     </div>
 </body>
 </html>
