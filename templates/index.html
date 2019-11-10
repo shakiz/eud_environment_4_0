@@ -23,8 +23,8 @@
         <button class="btn btn-warning" onclick="save()" id="save">Create App</button>
         <button class="btn btn-info" onclick="continuous()" id="continuous">Run Continuously</button>
         <button class="btn btn-danger" onclick="stop()" id="stop">Stop Continuous Run</button>
-        <button class="btn btn-success" onclick="saveComposition()"  id="saveComposition">Save Composition</button>
-        <button class="btn btn-dark" onclick="restore()" id="restore">Restore Composition</button>
+        <button class="btn btn-success" onclick="saveWorkspace()"  id="saveComposition">Save Composition</button>
+        <button class="btn btn-dark" onclick="restoreWorkspace()" id="restore">Restore Composition</button>
 
         {% csrf_token %}
     </p>
@@ -34,6 +34,7 @@
     <div id="blocklyDiv" class="col-md-6 pull-left" style="height: 480px; width: 50%;">
 
     </div>
+
     <xml id="toolbox" style="display: none">
         <category name="Logic" colour="%{BKY_LOGIC_HUE}">
             <block type="controls_if"></block>
@@ -45,7 +46,22 @@
             <block type="custom_if"></block>
             <block type="custom_if_else"></block>
 
-
+            <block type="controls_repeat_ext" id="]{9Nga1U#FP~RzpCmExJ" x="167" y="72">
+                <value name="TIMES">
+                    <block type="math_number" id="3*]NR;AL9|xe?7S3qU6R">
+                        <field name="NUM">10</field>
+                    </block>
+                </value>
+                <statement name="DO">
+                    <block type="print_content" id="gNev:Pt9s#]dE}@yNoTH">
+                        <value name="to_print">
+                            <block type="text" id=".8tm?Ab^`j.}/E`-!bXg">
+                                <field name="TEXT">Shakil</field>
+                            </block>
+                        </value>
+                    </block>
+                </statement>
+            </block>
 
         </category>
 
@@ -110,16 +126,32 @@
 
     </xml>
     <script>
-        var demoWorkspace = Blockly.inject('blocklyDiv', {media: 'blockly/media/', toolbox: document.getElementById('toolbox')});
+        var demoWorkspace = Blockly.inject('blocklyDiv', { toolbox: document.getElementById('toolbox')});
+
+        function saveWorkspace() {
+            let xml = Blockly.Xml.workspaceToDom(demoWorkspace);
+            let domToPretty = Blockly.Xml.domToPrettyText(xml);
+            var ranInt = Math.floor(Math.random() * 1000);
+            window.localStorage.setItem("myProgram"+ranInt, domToPretty);
+        }
+
+        // restore blocks
+        function restoreWorkspace() {
+            for (var i = 0; i < localStorage.length; i++){
+                console.log("length of data:::"+localStorage.length);
+                let program=(localStorage.getItem(localStorage.key(i)));
+                Blockly.mainWorkspace.clear();
+                let textTodom = Blockly.Xml.textToDom(program);
+                console.log('key '+localStorage.key(i));
+                console.log(textTodom);
+                Blockly.Xml.appendDomToWorkspace(textTodom,demoWorkspace);
+            }
+        }
         
         function saveComposition() {
-
-            {#let xml1 = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace);#}
-            {#let domToPretty = Blockly.Xml.domToPrettyText(xml1);#}
-            {#window.localStorage.setItem("myProgram1", domToPretty);#}
-
             var xml = Blockly.Xml.workspaceToDom(demoWorkspace);
             var code = Blockly.Xml.domToPrettyText(xml);
+
             alert(code);
             $.ajax({
                 type: 'POST',
@@ -149,37 +181,15 @@
                     {#console.log(value.replace(/['"]+/g, ''));#}
                     var result = value.slice(1, -1);
                     alert(result);
-
-
-                    {#let program = window.localStorage.getItem("myProgram");#}
-                    {#Blockly.mainWorkspace.clear();#}
-                    {##}
-                    {#let textToDom = Blockly.Xml.textToDom(program);#}
-                    {#Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, textToDom);#}
-
-                    {#parser = new DOMParser();#}
-                    {#xmlDoc = parser.parseFromString(data[0],"text/xml");#}
-                    {##}
                     document.getElementById("test").innerHTML = value;
+
+                    var xml = Blockly.xml.textToDom(value);
+                    Blockly.xml.domToWorkspace(Blockly.mainWorkspace, xml);
                     //document.getElementById("blocklyDiv").innerHTML = result;
                 },
                 error: function(xhr, textStatus) {
                        alert(textStatus);
                 }});
-                {#success: function (response) {#}
-                {#    var xml = Blockly.xml.textToDom(data);#}
-                {#    Blockly.xml.domToWorkspace(Blockly.mainWorkspace, xml);#}
-                {#    alert(data);#}
-                {#    console.log(response.code);#}
-                {#    document.getElementById("json").innerHTML = JSON.stringify(response.code, undefined, 2);#}
-                {#    $("#message").text(JSON.stringify(response.code));#}
-                {#}#}
-
-
-
-
-
-
         }
         
         function showCode() {
@@ -187,26 +197,6 @@
             var code = Blockly.Python.workspaceToCode(demoWorkspace);
             alert(code);
         }
-
-        {#function saveComposition() {#}
-        {#    Blockly.Python.INFINITE_LOOP_TRAP = null;#}
-        {#    var code = Blockly.Python.workspaceToCode(demoWorkspace);#}
-        {#    $.ajax({#}
-        {#        type: 'POST',#}
-        {#        url: "/save_composition/",#}
-        {#        headers: {#}
-        {#            "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()#}
-        {#        },#}
-        {#        data: {'code': code},#}
-        {#        success: function (response) {#}
-        {#            console.log(response.code);#}
-        {#            document.getElementById("json").innerHTML = JSON.stringify(response.code, undefined, 2);#}
-                    {#$("#message").text(JSON.stringify(response.code));#}
-        {#        }#}
-        {#    });#}
-        {##}
-        {#}#}
-
 
         function save() {
             Blockly.Python.INFINITE_LOOP_TRAP = null;
