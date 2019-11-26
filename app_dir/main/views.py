@@ -15,6 +15,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse
 from django.contrib import messages
 import logging
+from app_dir.main.application_manager import *
 from django.core import serializers
 
 
@@ -277,8 +278,9 @@ def exec_with_return(code):
 def eud_code(request):
     if request.is_ajax():
         code = request.POST['code']
+        ApplicationManager.get_app(ApplicationManager,code)
         result = exec_with_return(code)
     else:
         return HttpResponse('Use ajax format!')
-
+    print(result)
     return JsonResponse({'code': result})
