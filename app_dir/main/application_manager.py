@@ -1,4 +1,3 @@
-from app_dir.main.generated_functions import *
 import random
 import re
 
@@ -17,14 +16,13 @@ class ApplicationManager:
         print(code)
         app_id = generate_id()
         ContextManager.register(ContextManager, app_id, code)
-        ContextManager.get_context(ContextManager, app_id)
         VariantManager.register(VariantManager, app_id, code)
 
 
 class ContextManager:
     code = ""
     app_id = ""
-    service = ""
+    services = []
 
     def __init__(self) -> None:
         super().__init__()
@@ -40,6 +38,8 @@ class ContextManager:
         return
 
     def watch_context(self):
+        self.services = VariantManager.get_services(VariantManager)
+        print(self.services)
         # while True:
         # time.sleep(2)
         # weather = weather_info("Dhaka")
@@ -51,6 +51,8 @@ class VariantManager:
     total_variant = ""
     code = ""
     app_id = ""
+    services = []
+    default_service_list = ['news', 'cricket', 'newspaper_headlines', 'doctor', 'recipe_puppy', 'print_content', 'value_to_print', 'print']
 
     regex_if_true = re.compile(r"^if\strue:|^if\sTrue:$", re.MULTILINE)
     regex_if_false = re.compile(r"^if\sfalse|^if\sFalse:$", re.MULTILINE)
@@ -78,37 +80,45 @@ class VariantManager:
             print("Item :> "+item+" Space count ==>> "+str(item.count(' ')))
 
         if len(code_list) > 1:
-            print("More then 1 line")
+            print("More than 1 line")
             for item_code in code_list:
                 if item_code.strip().startswith('if'):
                     if self.regex_if_true.match(item_code.strip()):
                         match_str = self.regex_if_true.match(item_code.strip())
                         print('matched_str[if_true]::' + match_str.group()[2:-1])
-                        self.service = match_str.group()[2:-1]
-                        print('separated_service=>>>' + self.service)
+                        service = match_str.group()[2:-1]
+                        self.services.append(service)
+                        print('separated_service=>>>' + service)
                     elif self.regex_if_false.match(item_code.strip()):
                         match_str = self.regex_if_false.match(item_code.strip())
                         print('matched_str[if_false]::' + match_str.group()[2:-1])
-                        self.service = match_str.group()[2:-1]
-                        print('separated_service=>>>' + self.service)
+                        service = match_str.group()[2:-1]
+                        print('separated_service=>>>' + service)
                     elif self.regex_service.match(item_code.strip()):
                         match_str = self.regex_service.match(item_code.strip())
                         print('matched_str[service]::' + match_str.group()[2:-1])
-                        self.service = match_str.group()[2:-1]
-                        print('separated_service=>>>' + self.service)
+                        service = match_str.group()[2:-1]
+                        self.services.append(service)
+                        print('separated_service=>>>' + service)
                     elif self.regex_step_only.match(item_code.strip()):
                         match_str = self.regex_step_only.match(item_code.strip())
                         print('matched_str[step_only]::' + match_str.group())
-                        self.service = match_str.group()[2:-1]
-                        print('separated_service=>>>' + self.service)
+                        service = match_str.group()[2:-1]
+                        self.services.append(service)
+                        print('separated_service=>>>' + service)
                     else:
                         print("Does not match")
+                elif any(item_code in string for string in self.default_service_list):
+                    print('Default Item List Service Found =>>> '+item_code)
                 else:
-                    print("No more if , reached the finish line.or")
+                    print("No match found.")
         elif len(code_list) == 1:
             print("Only One Statement")
 
         return
+
+    def get_services(self):
+        return self.services
 
 
 def generate_id():
