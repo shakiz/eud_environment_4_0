@@ -40,10 +40,6 @@ class ContextManager:
     def watch_context(self):
         self.services = VariantManager.get_services(VariantManager)
         print(self.services)
-        # while True:
-        # time.sleep(2)
-        # weather = weather_info("Dhaka")
-        # print(weather)
         return
 
 
@@ -52,6 +48,7 @@ class VariantManager:
     code = ""
     app_id = ""
     services = []
+    variants = {}
     default_service_list = ['news', 'cricket', 'newspaper_headlines', 'doctor', 'recipe_puppy', 'print_content', 'value_to_print', 'print']
 
     regex_if_true = re.compile(r"^if\strue:|^if\sTrue:$", re.MULTILINE)
@@ -81,26 +78,27 @@ class VariantManager:
 
         if len(code_list) > 1:
             print("More than 1 line")
-            for item_code in code_list:
-                if item_code.strip().startswith('if'):
-                    if self.regex_if_true.match(item_code.strip()):
+            for i in range(len(code_list)):
+                item_code = code_list[i].strip()
+                if item_code.startswith('if'):
+                    if self.regex_if_true.match(item_code):
                         match_str = self.regex_if_true.match(item_code.strip())
                         print('matched_str[if_true]::' + match_str.group()[2:-1])
                         service = match_str.group()[2:-1]
                         self.services.append(service)
                         print('separated_service=>>>' + service)
-                    elif self.regex_if_false.match(item_code.strip()):
+                    elif self.regex_if_false.match(item_code):
                         match_str = self.regex_if_false.match(item_code.strip())
                         print('matched_str[if_false]::' + match_str.group()[2:-1])
                         service = match_str.group()[2:-1]
                         print('separated_service=>>>' + service)
-                    elif self.regex_service.match(item_code.strip()):
+                    elif self.regex_service.match(item_code):
                         match_str = self.regex_service.match(item_code.strip())
                         print('matched_str[service]::' + match_str.group()[2:-1])
                         service = match_str.group()[2:-1]
                         self.services.append(service)
                         print('separated_service=>>>' + service)
-                    elif self.regex_step_only.match(item_code.strip()):
+                    elif self.regex_step_only.match(item_code):
                         match_str = self.regex_step_only.match(item_code.strip())
                         print('matched_str[step_only]::' + match_str.group())
                         service = match_str.group()[2:-1]
@@ -108,13 +106,13 @@ class VariantManager:
                         print('separated_service=>>>' + service)
                     else:
                         print("Does not match")
-                elif any(item_code in string for string in self.default_service_list):
-                    print('Default Item List Service Found =>>> '+item_code)
+                    self.variants['variant'+str(i)] = self.services[i-1]
                 else:
                     print("No match found.")
         elif len(code_list) == 1:
             print("Only One Statement")
-
+        for k, v in self.variants.items():
+            print(k, 'corresponds to', v)
         return
 
     def get_services(self):

@@ -1,0 +1,26 @@
+import time
+
+from app_dir.main.generated_functions import weather_info
+
+
+class AdaptationEngine:
+    app_id = ""
+    code = ""
+
+    def __init__(self):
+        super.__init__()
+
+    def get_details(self, app_id, code):
+        self.app_id = app_id
+        self.code = code
+        return
+
+    def request_context(self):
+        return
+
+    def request_variant(self):
+        while True:
+            time.sleep(2)
+            weather = weather_info("Dhaka")
+            print(weather)
+        return
