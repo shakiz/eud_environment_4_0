@@ -10,6 +10,7 @@ regex_if_true = re.compile(r"^if\strue:|^if\sTrue:$", re.MULTILINE)
 regex_if_false = re.compile(r"^if\sfalse|^if\sFalse:$", re.MULTILINE)
 regex_service = re.compile(r"(if).*?:$", re.MULTILINE)
 regex_step_only = re.compile(r".*?", re.MULTILINE)
+city_regex = "(.)(weather_info)(.)(\\'.*?\\').*?(=)(=).*?(\\'.*?\\')"
 
 
 class ApplicationManager:
@@ -98,10 +99,19 @@ class ContextManager:
     def watch_context(self):
         for context in self.context_list:
             print("Watching ::::: "+context)
+
             if 'weather' in context:
-                result = gf.weather_info('Dhaka')
-                context_values.append(result)
-                print("Current Context :: "+result)
+                rg = re.compile(city_regex, re.IGNORECASE | re.DOTALL)
+                print(str(city_regex))
+                m = rg.search(context)
+                if m:
+                    city = m.group(4)[1:-1]
+                print("City : "+city)
+                result = gf.weather_info(city)
+            elif 'get_am_pm':
+                result = get_am_pm()
+            context_values.insert(0, result)
+        print("Current Context :: " + result)
         return result
 
 
@@ -109,7 +119,7 @@ class VariantManager:
     code = ""
     app_id = ""
     conditional_services = []
-    services = []
+    services = ["print_content('variant changes')", "(newspaper_headlines('bitcoin', '2019-11-13', 'publishedAt'))"]
 
     def __init__(self):
         print("in init variant manager")

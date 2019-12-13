@@ -26,6 +26,7 @@ import httplib2
 import os
 import base64
 import mimetypes
+import time
 
 try:
     import argparse
@@ -346,12 +347,16 @@ def interactive_creator(param0, param1):
     requests.post(second_url, data=data2)
     return "Interactive Block Created Successfully!"
 def newspaper_headlines(param0,param1,param2):
-    data = requests.get(" https://newsapi.org/v2/top-headlines?q=" + param0 + "&from=" + param1 + "&sortBy=" + param2 + "&apiKey=0bd59e0fc1474b5caf16c806d5dffc9c ").json()
+    data = requests.get("https://newsapi.org/v2/everything?q=" + param0 + "&from=" + param1 + "&sortBy=" + param2 + "&apiKey=0bd59e0fc1474b5caf16c806d5dffc9c").json()
     print(data)
     return data
 
+def get_am_pm():
+    data = str(time.strftime("%p"))
+    return data
+
 def recipe_puppy(param0,param1,param2):
-    data = requests.get(" http://www.recipepuppy.com/api/?i=" + param0 + "&q=" + param1 + "&p=" + param2 + " ").json()
+    data = requests.get("http://www.recipepuppy.com/api/?i=" + param0 + "&q=" + param1 + "&p=" + param2 + " ").json()
     print(data)
     return data
 

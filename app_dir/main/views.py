@@ -278,9 +278,9 @@ def exec_with_return(code):
 def eud_code(request):
     if request.is_ajax():
         code = request.POST['code']
-        ApplicationManager.get_app(ApplicationManager,code)
+        ApplicationManager.get_app(ApplicationManager, code)
         result = exec_with_return(code)
     else:
         return HttpResponse('Use ajax format!')
     print(result)
-    return JsonResponse({'code': result})
+    return JsonResponse({'code': 'Clear'})

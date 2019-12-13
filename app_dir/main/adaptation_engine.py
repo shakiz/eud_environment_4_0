@@ -1,10 +1,12 @@
 import random
-
+from app_dir.main.generated_functions import *
 import app_dir.main.application_manager as am
 import re
 import ast
 import copy
 import time
+import json
+import requests
 
 regex_mapper = re.compile(r"(if).*?:$", re.MULTILINE)
 variant = {}
@@ -24,6 +26,7 @@ def get_context():
 
 def request_variant():
     vm = am.VariantManager()
+
     print("request_variant() called")
     print(am.variants)
     print("----Acquired variants----")
@@ -80,7 +83,11 @@ class AdaptationEngine:
         return
 
     def get_selected_variant(self):
+        #while True:
+            #time.sleep(1)
+            #print("time:::::"+get_am_pm())
         for k, value in self.mapping_dict.items():
+            rm = RuntimeEngine()
             required_val = value[1]
             print("value[1]:::"+str(value[1]))
             print("Context Values :: : : : :: : "+str(context_values))
@@ -89,8 +96,16 @@ class AdaptationEngine:
                 if cv in required_val:
                     print("Selected Variant : " + str(value[len(value)-1]))
                     selected_variant = value[len(value)-1]
+                    print(str(selected_variant))
+                    rm.get_and_set_code(selected_variant)
                 else:
-                    print("No match")
+                    vm = am.VariantManager()
+                    services = vm.services
+                    selected_variant = services[random.randint(0, 1)]
+                    print(str(selected_variant))
+                    rm.get_and_set_code(selected_variant)
+                    #exec(selected_variant)
+                    #print(str((newspaper_headlines('bitcoin', '2019-11-12', 'publishedAt'))))
             #if value[1][:-1] in context_values:
             #if any(substring in string for substring in context_values):
 
@@ -99,43 +114,18 @@ class AdaptationEngine:
 
 class RuntimeEngine:
 
-    variant = ""
-
-    def __init__(self) -> None:
-        super.__init__()
+    def __init__(self):
+        print("in init runtime engine")
 
     def get_and_set_code(self, variant):
-        self.variant = variant
+        self.exec_print_result(variant)
         return
 
-    def execute_code(self):
-        while True:
-            time.sleep(2)
-            code_ast = ast.parse(self.code)
-
-            init_ast = copy.deepcopy(code_ast)
-            init_ast.body = code_ast.body[:-1]
-
-            last_ast = copy.deepcopy(code_ast)
-            last_ast.body = code_ast.body[-1:]
-
-            exec(compile(init_ast, "<ast>", "exec"), globals())
-            if type(last_ast.body[0]) == ast.Expr:
-                return eval(compile(convert_expr_expression(last_ast.body[0]), "<ast>", "eval"), globals())
-            else:
-                exec(compile(last_ast, "<ast>", "exec"), globals())
-
-    def print_result(self):
-        result = self.execute_code(self)
-        print(result)
+    def exec_print_result(self,variant):
+        result = exec(variant)
+        print("From Runtime Engine"+str(result))
 
 
-def convert_expr_expression(expr):
-    expr.lineno = 0
-    expr.col_offset = 0
-    result = ast.Expression(expr.value, lineno=0, col_offset=0)
-
-    return result
 
 
 

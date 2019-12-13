@@ -257,6 +257,22 @@ Blockly.Blocks['recipe_puppy'] = {
     }
 };
 
+Blockly.Blocks['get_am_pm'] = {
+    init: function () {
+        this.appendDummyInput()
+            .appendField("")
+            .appendField(new Blockly.FieldDropdown([
+            ['PM', 'PM'],
+            ['AM', 'AM']
+        ]), 'get_am_pm');
+
+        this.setOutput(true, null);
+        this.setColour(230);
+        this.setTooltip("");
+        this.setHelpUrl("");
+    }
+};
+
 Blockly.Blocks['cricket'] = {
     init: function () {
         this.appendValueInput("param0")
