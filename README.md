@@ -2,7 +2,7 @@
 
 ## Table of contents
 * [Background](#background)
-* [Features](#objective )
+* [Objective](#objective )
 
 ## Background
 The thing which most effects our life is IOT services. It just making our life simpler and easier because it provides the simplicities and functionalities that we need in our 
